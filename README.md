@@ -12,7 +12,9 @@
 - **Hardware & Low-Level I/O**
   - **Compute:** Raspberry Pi 4.
   - **Inputs:** Native hardware integration using `gpio-keys` and `adc-joystick` drivers via **Device Tree Overlays**. 
-  - **ADC:** External SPI-based ADC (e.g., MCP3008) to bridge analog stick data to the IIO (Industrial I/O) subsystem.
+  - **ADC:**
+    - External SPI-based ADC (e.g., MCP3008) for polled sampling.
+    - Alternatively I2C based ADC (ADS1015) for hardware-triggered interrupts. 
   - **Display:** MIPI DSI interface utilizing the **VC4 DRM/KMS** driver for GPU-accelerated output.
 
 - **Software & Input Mapping**
@@ -44,16 +46,17 @@
 *Goal: Establish a hardware-to-kernel communication bridge.*
 - [ ] **SPI & IIO Integration:** Connect ADC via SPI and verify raw voltage readings.
 - [ ] **Device Tree Development:** Write custom `.dts` overlays to bind ADC channels to the `adc-joystick` driver.
+- [ ] **Interrupt vs Polled sampling:** Polling via `adc-joystick` can sometimes feel jumpy, interrupt driven readings may be better. Use ADC with interrupt pin if interrupt route is used to avoid need for an external MCU. 
 - [ ] **Input Verification:** Achieve native `/dev/input/js0` recognition without userspace polling scripts.
 - [ ] **Digital Logic:** Implement `gpio-keys` with kernel-level debouncing for physical buttons.
 
 ### Phase 1.5: Containerized Graphics & Input Passthrough
-*Goal: Validate the hybrid architecture by proving Docker-to-Hardware performance.
-- [ ] Mesa/DRM Mapping: Research and map host /dev/dri/card0 and /dev/dri/renderD128 into a test container to achieve GPU-accelerated rendering.
-- [ ] Library Alignment: Ensure the containerized SDL2/Mesa version matches the host kernel’s VC4/V3D driver requirements to avoid software fallback.
-- [ ] Input Device Plumbing: Verify /dev/input/ passthrough, ensuring evsieve or SDL2 can capture raw events from the host’s gpio-keys and adc-joystick.
-- [ ] Benchmark Validation: Run glmark2-es2 or a simple SDL2 test app within a container to confirm 60FPS output with zero input lag.
-- [ ] OCI Runtime Optimization: Evaluate Podman or raw runc as alternatives to the standard Docker daemon to minimize startup overhead and memory footprint.
+*Goal: Validate the hybrid architecture by proving Docker-to-Hardware performance.*
+- [ ] **Mesa/DRM Mapping:** Research and map host /dev/dri/card0 and /dev/dri/renderD128 into a test container to achieve GPU-accelerated rendering.
+- [ ] **Library Alignment:** Ensure the containerized SDL2/Mesa version matches the host kernel’s VC4/V3D driver requirements to avoid software fallback.
+- [ ] **Input Device Plumbing:** Verify /dev/input/ passthrough, ensuring evsieve or SDL2 can capture raw events from the host’s gpio-keys and adc-joystick.
+- [ ] **Benchmark Validation:** Run glmark2-es2 or a simple SDL2 test app within a container to confirm 60FPS output with zero input lag.
+- [ ] **OCI Runtime Optimization:** Evaluate Podman or raw runc as alternatives to the standard Docker daemon to minimize startup overhead and memory footprint.
 
 ### Phase 2: Engine & Graphics Optimization
 *Goal: High-performance execution of the Fallout-CE engine.*
