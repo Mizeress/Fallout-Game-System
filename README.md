@@ -1,6 +1,8 @@
 # Fallout-Game-System: Embedded Handheld
 **Documentation for a purpose-built Linux handheld for the Fallout Community Edition (CE) engine.**
 
+## Project Status 🏗️ Phase 1 - Research & PoC
+
 ## 🛠 Tech Stack
 - **Yocto / Buildroot Custom Distribution**
   - **Goal:** Minimal footprint OS (under 100MB) optimized for sub-10 second boot times.
