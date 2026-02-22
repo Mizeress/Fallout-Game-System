@@ -17,6 +17,25 @@
   - **Engine:** [Fallout-CE](https://github.com/alexbatalov/fallout1-ce) (Community Edition) cross-compiled for AArch64.
   - **Mapping:** Headless input remapping via `evsieve` or SDL2 GameController API to translate gamepad events into mouse/keyboard sequences required for Fallout’s legacy UI.
 
+- **Hybrid Architecture - Maybe**:
+  - Host Machine:
+    - Core OS, Drivers, and Game Selection UI (multiple games not MVP), 
+  - Docker Containers
+    - Specific Games, game-specific input remapping, and any necessary emulators (e.g. DOSbox for Elder Scrolls Arena)
+   
+  - *Pros*
+    *   **Modular Scalability:** Add new games (like *The Elder Scrolls: Arena*) by simply pulling a new image without needing to reflash or modify the core Buildroot filesystem.
+    *   **Dependency Isolation:** Run games that require legacy libraries or specific versions of DOSBox/Python without "polluting" the slim host OS or creating version conflicts.
+    *   **Atomic Updates:** Update game logic, input remapping scripts, or emulator versions independently of the underlying hardware drivers.
+    *   **Development Speed:** Build and test game "sections" on a standard Linux PC (using cross-platform base images) and deploy to the Pi 4 instantly.
+    *   **Enhanced Stability:** A crash or memory leak within a game container is less likely to freeze the Main UI or the host system.
+
+  - *Cons*
+    *   **Storage Overhead:** Container images (even Alpine-based) consume more SD card space than native binaries due to bundled libraries.
+    *   **GPU Complexity:** Hardware acceleration requires mounting `/dev/dri` and ensuring the container's Mesa drivers match the host's kernel version.
+    *   **Input Management:** Requires explicit passthrough of `/dev/input` devices and potentially `/dev/uinput` for virtual remapping logic.
+    *   **Slightly Slower Cold Boots:** Launching a containerized game takes a few seconds longer than launching a native binary due to the container startup sequence.
+
 ## 🗺️ Development Roadmap
 
 ### Phase 1: Silicon & Kernel Proof-of-Concept
@@ -25,6 +44,14 @@
 - [ ] **Device Tree Development:** Write custom `.dts` overlays to bind ADC channels to the `adc-joystick` driver.
 - [ ] **Input Verification:** Achieve native `/dev/input/js0` recognition without userspace polling scripts.
 - [ ] **Digital Logic:** Implement `gpio-keys` with kernel-level debouncing for physical buttons.
+
+### Phase 1.5: Containerized Graphics & Input Passthrough
+*Goal: Validate the hybrid architecture by proving Docker-to-Hardware performance.
+- [ ] Mesa/DRM Mapping: Research and map host /dev/dri/card0 and /dev/dri/renderD128 into a test container to achieve GPU-accelerated rendering.
+- [ ] Library Alignment: Ensure the containerized SDL2/Mesa version matches the host kernel’s VC4/V3D driver requirements to avoid software fallback.
+- [ ] Input Device Plumbing: Verify /dev/input/ passthrough, ensuring evsieve or SDL2 can capture raw events from the host’s gpio-keys and adc-joystick.
+- [ ] Benchmark Validation: Run glmark2-es2 or a simple SDL2 test app within a container to confirm 60FPS output with zero input lag.
+- [ ] OCI Runtime Optimization: Evaluate Podman or raw runc as alternatives to the standard Docker daemon to minimize startup overhead and memory footprint.
 
 ### Phase 2: Engine & Graphics Optimization
 *Goal: High-performance execution of the Fallout-CE engine.*
@@ -52,5 +79,8 @@
   - Potentially Pip Boy UI via LVGL
 - [ ] **Dynamic Input Profiling:** Develop a middleware script to swap `evsieve` profiles based on the selected title.
 - [ ] **DRM/KMS Multi-tenancy:** Research seamless transitions between the launcher context and the game engine context.
-- [ ] **Library Expansion:** Cross-compile additional engine recreations (e.g., OpenMW, DevilutionX) to test platform extensibility.
+- [ ] Test adding a Fallout 2 container or Elder Scrolls Arena container to prove scalability
+
+
+
 
