@@ -27,7 +27,17 @@
   - Containers
     - Specific Games, game-specific input remapping, and any necessary emulators (e.g. DOSbox for Elder Scrolls Arena)
     - Containerization Software (Docker, Podman, etc.)
-      - **TODO** Research the best solution for this application
+    <details> <summary>Containerization Comparison (Docker vs Podman)</summary>
+
+      | Feature | Docker | Podman (+ crun) | Project Impact |
+      | :--- | :--- | :--- | :--- |
+      | **Architecture** | Client-Server (Daemon-based) | **Daemonless** | Podman eliminates the `dockerd` background process, saving ~150MB RAM. |
+      | **Runtime Engine** | `runc` (Go-based) | **`crun` (C-based)** | `crun` has a smaller footprint and faster execution, critical for <10s boot. |
+      | **Init Integration** | Manual `docker start` hooks | **Systemd / Quadlets** | Game containers act as native system services for better lifecycle management. |
+      | **Security** | Root-dependent | **Rootless by Default** | Safer execution on a Read-Only rootfs; isolates legacy emulators. |
+      | **Image Size** | Standard OCI | Standard OCI | **Tie**: Both use the same layers, though Podman handles local storage better. |
+                   
+      </details>
    
   - *Pros*
     *   **Modular Scalability:** Add new games (like *The Elder Scrolls: Arena*) by simply pulling a new image without needing to reflash or modify the core Buildroot filesystem.
