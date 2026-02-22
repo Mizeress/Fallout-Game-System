@@ -19,7 +19,7 @@
   - **Engine:** [Fallout-CE](https://github.com/alexbatalov/fallout1-ce) (Community Edition) cross-compiled for AArch64.
   - **Mapping:** Headless input remapping via `evsieve` or SDL2 GameController API to translate gamepad events into mouse/keyboard sequences required for Fallout’s legacy UI.
 
-- **Hybrid Architecture - Maybe**:
+- **Hybrid Architecture**:
   - Host Machine:
     - Core OS, Drivers, and Game Selection UI (multiple games not MVP), 
   - Docker Containers
