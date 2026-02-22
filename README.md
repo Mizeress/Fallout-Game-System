@@ -80,9 +80,11 @@
 
 ### Phase 5: Multi-Game Ecosystem & Custom UI (Future Considerations)
 *Goal: Transition from a single-title appliance to a multi-game handheld platform.*
-- [ ] **Unified Launcher:** Evaluate lightweight front-ends (e.g., EmulationStation, Pegasus, or a custom LVGL-based UI).
-  - Potentially Pip Boy UI via LVGL
+- [ ] **Unified Launcher:** Evaluate lightweight front-ends e.g. custom LVGL-based UI).
+  - Pip Boy UI via LVGL
+  - Containerize the UI and use display layering to seamlessly switch between different styles.
 - [ ] **Dynamic Input Profiling:** Develop a middleware script to swap `evsieve` profiles based on the selected title.
+  - Note, this would instead be handled by Container switching in the Hybrid Architecture
 - [ ] **DRM/KMS Multi-tenancy:** Research seamless transitions between the launcher context and the game engine context.
 - [ ] Test adding a Fallout 2 container or Elder Scrolls Arena container to prove scalability
 
