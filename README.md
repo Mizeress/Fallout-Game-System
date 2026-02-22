@@ -24,8 +24,10 @@
 - **Hybrid Architecture**:
   - Host Machine:
     - Core OS, Drivers, and Game Selection UI (multiple games not MVP), 
-  - Docker Containers
+  - Containers
     - Specific Games, game-specific input remapping, and any necessary emulators (e.g. DOSbox for Elder Scrolls Arena)
+    - Containerization Software (Docker, Podman, etc.)
+      - **TODO** Research the best solution for this application
    
   - *Pros*
     *   **Modular Scalability:** Add new games (like *The Elder Scrolls: Arena*) by simply pulling a new image without needing to reflash or modify the core Buildroot filesystem.
