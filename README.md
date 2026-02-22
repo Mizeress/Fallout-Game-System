@@ -47,7 +47,7 @@
     *   **Enhanced Stability:** A crash or memory leak within a game container is less likely to freeze the Main UI or the host system.
 
   - *Cons*
-    *   **Storage Overhead:** Container images (even Alpine-based) consume more SD card space than native binaries due to bundled libraries.
+    *   **Storage Overhead:** Container images consume more SD card space than native binaries.
     *   **GPU Complexity:** Hardware acceleration requires mounting `/dev/dri` and ensuring the container's Mesa drivers match the host's kernel version.
     *   **Input Management:** Requires explicit passthrough of `/dev/input` devices and potentially `/dev/uinput` for virtual remapping logic.
     *   **Slightly Slower Cold Boots:** Launching a containerized game takes a few seconds longer than launching a native binary due to the container startup sequence.
